@@ -6,6 +6,7 @@ O video que assisti para estudar
 勉強するために見た動画
 
 https://www.youtube.com/watch?v=nc0rEUrlnCE
+
 https://www.youtube.com/watch?v=6kd81YDxWvk&t=3s
 
 Neste projeto acrescentei uma caixa nas costas que muda de cor, para pegar somente os cubos que tiveram as cores iguais a caixa
