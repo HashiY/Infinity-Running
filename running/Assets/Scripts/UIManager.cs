@@ -9,6 +9,13 @@ public class UIManager : MonoBehaviour
     public Text coinText;
     public GameObject gameOverPanel;
     public Text scoreText;
+    public AudioClip fishCoin;
+    AudioSource audioSource;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void UpdateLives(int lives) // quantidade de vidas atuais
     {
@@ -29,6 +36,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCoins(int coin) // coin vem do Player
     {
+        audioSource.PlayOneShot(fishCoin, 0.1f);
         coinText.text = coin.ToString();//o texto atualizado
     }
 

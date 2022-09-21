@@ -12,11 +12,14 @@ public class Menu : MonoBehaviour
     public GameObject[] characters;// colocar os chara q vao ser escolhidos para jogar
 
     private int characterIndex = 0; // index dos perdonagens e começar no 0
-    
+
+    public AudioClip arrowSE, startSE, noFish;
+    AudioSource audioSource;
+
     // Use this for initialization
     void Start()
     {
-
+        audioSource = GetComponent<AudioSource>();
         SetMission();
         UpdateCoins(GameManager.gm.coins);//atualizar qundo iniciar
        
@@ -42,11 +45,16 @@ public class Menu : MonoBehaviour
     {                                                     //se da para comprar o personagem
         if (GameManager.gm.characterCost[characterIndex] <= GameManager.gm.coins)//se o custo for menor q o q tem de moedas
         {
+            audioSource.PlayOneShot(startSE, 0.2f);
             GameManager.gm.coins -= GameManager.gm.characterCost[characterIndex];//diminui a moeda com ocusto do personagem
             GameManager.gm.characterCost[characterIndex] = 0;//0 = comprado
             GameManager.gm.Save();//salva
             GameManager.gm.StartRun(characterIndex); //para chamar as funçoes dos botoese ir para o startRun
         }                           //qual selecionado
+        else
+        {
+            audioSource.PlayOneShot(noFish, 0.2f);
+        }
     }
     
     public void SetMission() //definir as missions na tela
@@ -76,7 +84,9 @@ public class Menu : MonoBehaviour
     
     public void ChangeCharacter(int index) //funçao para os botoes q muda de personagem de escolha
     {
+        audioSource.PlayOneShot(arrowSE, 0.2f);
         characterIndex += index; // adiciona o index
+
         if (characterIndex >= characters.Length) // se for maior que o tamanho dos personagens(quantidade)
         {
             characterIndex = 0;//volta para o inicio

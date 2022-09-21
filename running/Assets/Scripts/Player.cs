@@ -41,6 +41,8 @@ public class Player : MonoBehaviour
 
     private bool canMove;//quando pode se mover ou nao
 
+    public AudioClip damageSE, jumpSE, slideSE, deadSE, changeLaneSE;
+    AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();//esta no filho
         boxCollider = GetComponent<BoxCollider>();
         boxColliderSize = boxCollider.size;
+        audioSource = GetComponent<AudioSource>();
 
         currentLife = maxLife;
         
@@ -77,19 +80,19 @@ public class Player : MonoBehaviour
 
 
         //troca de lane
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             ChangeLane(-1);
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             ChangeLane(1);
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
             Jump();
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
             Slide();
         }
@@ -196,6 +199,7 @@ public class Player : MonoBehaviour
 
     void ChangeLane(int direction)
     {
+        audioSource.PlayOneShot(changeLaneSE, 0.5f);
         int targetLane = currentLane + direction;//qual a line q vai , atual+direçao
         if (targetLane < 0 || targetLane > 2) // ou
             return; //nao permite isso
@@ -207,6 +211,7 @@ public class Player : MonoBehaviour
     {
         if (!jumping) // se esta pulando
         {
+            audioSource.PlayOneShot(jumpSE, 0.3f);
             jumpStart = transform.position.z; //posiçao no eixo de z
             anim.SetFloat("JumpSpeed", speed / jumpLength);//velocidade/tamano do pulo
             anim.SetBool("Jumping", true);
@@ -217,6 +222,7 @@ public class Player : MonoBehaviour
     {
         if (!jumping && !sliding) // se nao esta pulando e escorregando
         {
+            audioSource.PlayOneShot(slideSE, 0.2f);
             slideStart = transform.position.z;
             anim.SetFloat("JumpSpeed", speed / slideLength);//velocidade/tamano do slide
             anim.SetBool("Sliding", true);
@@ -249,9 +255,11 @@ public class Player : MonoBehaviour
             currentLife--; // diminui a vida
             uiManager.UpdateLives(currentLife);//atualizar a imagem da vida no ui
             anim.SetTrigger("Hit");
+            audioSource.PlayOneShot(damageSE, 0.3f);
             speed = 0;
             if (currentLife <= 0) // vida = 0 
             {
+                audioSource.PlayOneShot(deadSE, 0.3f);
                 speed = 0; // zera a velocidade
                 anim.SetBool("Dead", true); //anime
                 uiManager.gameOverPanel.SetActive(true); // ativa
